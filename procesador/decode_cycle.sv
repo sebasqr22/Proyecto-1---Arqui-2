@@ -47,12 +47,12 @@ module decode_cycle( clk,rst,InstrD, PCD, PCPlus4D, RegWriteW ,RDW, ResultW, Reg
 
    // TODO: add vector register file  							
 	register_file rf (
-							.clk(clk),
+							.clk(~clk),
 							.rst(rst),
 							.WE3(RegWriteW),
 							.WD3(ResultW),
-							.A1(InstrD[15:10]),
-							.A2(InstrD[21:16]),
+							.A1(InstrD[16:11]),
+							.A2(InstrD[22:17]),
 							.A3(RDW),
 							.RD1(RD1_D),
 							.RD2(RD2_D)

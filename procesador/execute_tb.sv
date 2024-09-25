@@ -2,154 +2,165 @@
 
 module execute_tb;
 
-	// Parameters
-	parameter CLK_PERIOD = 10; // Clock period in ns
+    // Parameters
+    parameter CLK_PERIOD = 10; // Clock period in ns
 
-	// Inputs
-	reg clk, rst, RegWriteE,ALUSrcE,MemWriteE,ResultSrcE,BranchE;
-	reg [2:0] ALUControlE;
-	reg [31:0] RD1_E, RD2_E, Imm_Ext_E;
-	reg [5:0] RD_E;
-	reg [31:0] PCE, PCPlus4E;
-	reg [31:0] ResultW;
-	reg [1:0] ForwardA_E, ForwardB_E;
+    // Inputs
+    reg clk;
+    reg rst;
+    reg RegWriteE;
+    reg ALUSrcE;
+    reg MemWriteE;
+    reg ResultSrcE;
+    reg BranchE;
+    reg is_vectorial;
+    reg [2:0] ALUControlE;
+    reg [31:0] RD1_E;
+    reg [31:0] RD2_E;
+    reg [31:0] Imm_Ext_E;
+    reg [5:0] RD_E;
+    reg [31:0] PCE;
+    reg [31:0] PCPlus4E;
+    reg [31:0] ResultW;
+    reg [1:0] ForwardA_E;
+    reg [1:0] ForwardB_E;
 
-	//Outputs
-	reg PCSrcE, RegWriteM, MemWriteM, ResultSrcM;
-	reg [5:0] RD_M; 
-	reg [31:0] PCPlus4M, WriteDataM, ALU_ResultM;
-	reg [31:0] PCTargetE;
+    // Outputs
+    wire PCSrcE;
+    wire RegWriteM;
+    wire MemWriteM;
+    wire ResultSrcM;
+    wire [5:0] RD_M;
+    wire [31:0] PCPlus4M;
+    wire [31:0] WriteDataM;
+    logic [31:0] ALU_ResultM;
+    wire [31:0] PCTargetE;
 
+    // Instantiate the DUT (Device Under Test)
+    execute_cycle dut (
+        .clk(clk),
+        .rst(rst),
+        .RegWriteE(RegWriteE),
+        .ALUSrcE(ALUSrcE),
+        .MemWriteE(MemWriteE),
+        .ResultSrcE(ResultSrcE),
+        .BranchE(BranchE),
+        .is_vectorial(is_vectorial),
+        .ALUControlE(ALUControlE),
+        .RD1_E(RD1_E),
+        .RD2_E(RD2_E),
+        .Imm_Ext_E(Imm_Ext_E),
+        .RD_E(RD_E),
+        .PCE(PCE),
+        .PCPlus4E(PCPlus4E),
+        .ResultW(ResultW),
+        .ForwardA_E(ForwardA_E),
+        .ForwardB_E(ForwardB_E),
+        .PCSrcE(PCSrcE),
+        .RegWriteM(RegWriteM),
+        .MemWriteM(MemWriteM),
+        .ResultSrcM(ResultSrcM),
+        .RD_M(RD_M),
+        .PCPlus4M(PCPlus4M),
+        .WriteDataM(WriteDataM),
+        .ALU_ResultM(ALU_ResultM),
+        .PCTargetE(PCTargetE)
+    );
 
+    // Clock generation
+    always begin
+        #((CLK_PERIOD / 2));
+        clk = ~clk;
+    end
 
-	// Instantiate the DUT
-	execute_cycle dut (
-		.clk(clk), 
-		.rst(rst), 
-		.RegWriteE(RegWriteE),
-		.ALUSrcE(ALUSrcE),
-		.MemWriteE(MemWriteE),
-		.ResultSrcE(ResultSrcE),
-		.BranchE(BranchE),
-		.ALUControlE(ALUControlE),
-		.RD1_E(RD1_E), 
-		.RD2_E(RD2_E), 
-		.Imm_Ext_E(Imm_Ext_E),
-		.RD_E(RD_E),
-		.PCE(PCE), 
-		.PCPlus4E(PCPlus4E),
-		.PCSrcE(PCSrcE), 
-		.PCTargetE(PCTargetE),
-		.RegWriteM(RegWriteM), 
-		.MemWriteM(MemWriteM), 
-		.ResultSrcM(ResultSrcM),
-		.RD_M(RD_M), 
-		.PCPlus4M(PCPlus4M), 
-		.WriteDataM(WriteDataM), 
-		.ALU_ResultM(ALU_ResultM), 
-		.ResultW(ResultW), 
-		.ForwardA_E(ForwardA_E), 
-		.ForwardB_E(ForwardB_E)
-	);
+    // Reset and stimulus initialization
+    initial begin
+        // Initial conditions
+        clk = 0;
+        rst = 1;
+        RegWriteE = 0;
+        ALUSrcE = 0;
+        MemWriteE = 0;
+        ResultSrcE = 0;
+        BranchE = 0;
+        is_vectorial = 0;
+        ALUControlE = 3'b000;
+        RD1_E = 32'b0;
+        RD2_E = 32'b0;
+        Imm_Ext_E = 32'b0;
+        RD_E = 6'b0;
+        PCE = 32'b0;
+        PCPlus4E = 32'b0;
+        ResultW = 32'b0;
+        ForwardA_E = 2'b00;
+        ForwardB_E = 2'b00;
 
-	// Clock generation
-	always begin
-		#((CLK_PERIOD / 2));
-		clk <= ~clk;
-	end
+        // Wait for some time before releasing reset
+        #20;
+        rst = 0;
 
-	// Reset initialization
-	initial begin
-		clk = 0;
-		rst = 1;
-		RegWriteE = 0;
-		ALUSrcE = 0;
-		MemWriteE = 0;
-		ResultSrcE = 0;
-		BranchE = 0;
-		ALUControlE = 0;
-		RD1_E = 0;
-		RD2_E = 0;
-		Imm_Ext_E = 0;
+        // Test Case 1: Scalar addition with no forwarding
+        #10;
+        RegWriteE = 1;
+        ALUSrcE = 1;
+        MemWriteE = 0;
+        ResultSrcE = 0;
+        BranchE = 0;
+        is_vectorial = 0;  // Scalar operation
+        ALUControlE = 3'b000;  // Addition
+        RD1_E = 128'd10;  // First operand
+        RD2_E = 128'd20;  // Second operand
+        Imm_Ext_E = 32'd0;
+        RD_E = 6'b000001;  // Destination register
+        PCE = 32'd100;
+        PCPlus4E = 32'd104;
+        ForwardA_E = 2'b00;  // No forwarding
+        ForwardB_E = 2'b00;  // No forwarding
 
-		#20; // Wait for 2 clock cycles
+        #20;
+        $display("Test 1 (Scalar Add): ALU_ResultM = %d", ALU_ResultM);
+        
+        // Test Case 2: Vector addition
+        #10;
+        is_vectorial = 1;  // Vector operation
+        RD1_E = 128'h00000001_00000002_00000003_00000004;  // Vector operand A
+        RD2_E = 128'h00000001_00000002_00000003_00000004;  // Vector operand B
+        ALUControlE = 3'b000;  // Addition for vector
 
-		// Release reset
-		rst = 0;
+        #20;
+        $display("Test 2 (Vector Add): ALU_ResultM = %h", ALU_ResultM);
 
-		// Test case 1: Suma con inmediato (SMI)
-		#50; // Wait for 5 clock cycles
-		RegWriteE = 1;
-		ALUSrcE = 1;
-		ALUControlE = 3'b111;
-		RD1_E = 32'h0003;
-		RD2_E = 32'h0002;
-		Imm_Ext_E = 32'h0007;
+        // Test Case 3: Forwarding from MEM stage
+        #10;
+        is_vectorial = 0;  // Scalar operation
+        ForwardA_E = 2'b10;  // Forward from MEM stage
+        ForwardB_E = 2'b10;  // Forward from MEM stage
+        ALU_ResultM = 32'd50;  // Forwarding result from MEM stage
 
-		// Test case 2: Suma con registros (SM)
-		#50; // Wait for 5 clock cycles
-		RegWriteE = 1;
-		ALUSrcE = 0; 
-		ALUControlE = 3'b111;
-		RD1_E = 32'h0003;
-		RD2_E = 32'h0002;
-		Imm_Ext_E = 32'h0007;
-		
-		// Test case 3: Resta con registros (RS)
-		#50; // Wait for 5 clock cycles
-		RegWriteE = 1;
-		ALUSrcE = 0; 
-		ALUControlE = 3'b000;
-		RD1_E = 32'h0003;
-		RD2_E = 32'h0002;
-		Imm_Ext_E = 32'h0007;
-		
-		// Test case 4: Resta de resultado negativo con registros (RS)
-		#50; // Wait for 5 clock cycles
-		RegWriteE = 1;
-		ALUSrcE = 0; 
-		ALUControlE = 3'b000;
-		RD1_E = 32'h0000;
-		RD2_E = 32'h0005;
-		Imm_Ext_E = 32'h0007;
-		
-		// Test case 5: Multiplicacion con registros (ML)
-		#50; // Wait for 5 clock cycles
-		RegWriteE = 1;
-		ALUSrcE = 0; 
-		ALUControlE = 3'b001;
-		RD1_E = 32'h0003;
-		RD2_E = 32'h0005;
-		Imm_Ext_E = 32'h0007;
-		
-		// Test case 6: Multiplicacion de resultado negativo con registros (ML)
-		#50; // Wait for 5 clock cycles
-		RegWriteE = 1;
-		ALUSrcE = 0; 
-		ALUControlE = 3'b001;
-		RD1_E = 32'h0003;
-		RD2_E = 32'hFFFB; // 3 * -5
-		Imm_Ext_E = 32'h0007;
-		
-		// Test case 7: Operacion OR con registros (ORR)
-		#50; // Wait for 5 clock cycles
-		RegWriteE = 1;
-		ALUSrcE = 0; 
-		ALUControlE = 3'b010;
-		RD1_E = 32'h0009; //1001
-		RD2_E = 32'h0005; //0101
-		Imm_Ext_E = 32'h0007;
-		
-		// Test case 8: Corrimiento derecho con inmediato (ORR)
-		#50; // Wait for 5 clock cycles
-		RegWriteE = 1;
-		ALUSrcE = 0; 
-		ALUControlE = 3'b011;
-		RD1_E = 32'h0009;
-		RD2_E = 32'h0005;
-		Imm_Ext_E = 32'h0002;
-		
-		#500; // Wait for 10 clock cycles and then stop simulation
-		$finish;
-	end
+        #20;
+        $display("Test 3 (Forwarding from MEM): ALU_ResultM = %d", ALU_ResultM);
+
+        // Test Case 4: Branch operation (Zero condition met)
+        #10;
+        BranchE = 1;
+        ALUControlE = 3'b001;  // Branch check (subtraction)
+        RD1_E = 32'd50;
+        RD2_E = 32'd50;  // Zero condition met (RD1 - RD2 = 0)
+        Imm_Ext_E = 32'd4;  // Branch offset
+
+        #20;
+        $display("Test 4 (Branch): PCSrcE = %b, PCTargetE = %d", PCSrcE, PCTargetE);
+
+        // Test Case 5: Immediate operation (ALUSrcE = 1)
+        #10;
+        ALUSrcE = 1;  // Use immediate instead of RD2_E
+        Imm_Ext_E = 32'd100;
+
+        #20;
+        $display("Test 5 (Immediate): ALU_ResultM = %d", ALU_ResultM);
+
+        #100;
+        $finish;
+    end
+
 endmodule

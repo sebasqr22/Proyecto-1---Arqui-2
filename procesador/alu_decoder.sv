@@ -3,7 +3,7 @@ module alu_decoder(ALUOp,funct3,funct7,op,ALUControl);
     input [1:0]ALUOp;
     input [2:0]funct3;
     input [6:0]funct7;
-	 input [4:0]op; // ajustado
+	input [4:0]op; // ajustado
     output [2:0]ALUControl;
 
     // Method 2 AJUSTAR OP

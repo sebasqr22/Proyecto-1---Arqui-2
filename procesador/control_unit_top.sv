@@ -1,6 +1,6 @@
 module control_unit_top(Op,RegWrite,ImmSrc,ALUSrc,MemWrite,ResultSrc,Branch,funct3,funct7,ALUControl,vectorial);
 
-    input [3:0]Op; // ajustado
+    input [4:0]Op; // ajustado
 	input [6:0]funct7; // ajustado
     input [2:0]funct3; // ajustado
     output RegWrite,ALUSrc,MemWrite,ResultSrc,Branch,vectorial;

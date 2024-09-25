@@ -83,24 +83,23 @@ module decode_tb;
 
         // Test case 1: PCSrcE = 0, PCTargetE = 32'h00001000
         #50; // Wait for 5 clock cycles
-        RegWriteW = 0;
+        RegWriteW = 1;
         RDW = 6'b000001;
-        InstrD = 32'b00000011111001000000000001100000;
+        InstrD = 32'b00000011111001000001100010000011;
+        PCD = 32'b00000011111001000001100010000011;
+        PCPlus4D = 32'b00000011111001000000000001100000;
+        ResultW = 32'h00000002;
+		  
+		  #50; // Wait for 5 clock cycles
+		  RegWriteW = 0;
+		  RDW = 6'b000001;
+		  InstrD = 32'b00000011111001000000000001100000;
         PCD = 32'b00000011111001000000000001100000;
         PCPlus4D = 32'b00000011111001000000000001100000;
-        ResultW = 32'h00000000;
-		  
-		  //#50; // Wait for 5 clock cycles
-        //RegWriteW = 1;
-        //RDW = 6'b000001;
-        //InstrD = 32'b0000001111100100000000000110011;
-        //PCD = 32'hABCDEF00;
-        //PCPlus4D = 32'hABCDEF04;
-        //ResultW = 32'hFFFFFFFF;
-
+        ResultW = 32'h00000004;
 		  
 
-        #500; // Wait for 10 clock cycles and then stop simulation
+        #300; // Wait 
         $finish;
     end
 

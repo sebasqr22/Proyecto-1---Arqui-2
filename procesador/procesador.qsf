@@ -56,7 +56,7 @@ set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
 set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
 set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
 set_global_assignment -name EDA_TEST_BENCH_ENABLE_STATUS TEST_BENCH_MODE -section_id eda_simulation
-set_global_assignment -name EDA_NATIVELINK_SIMULATION_TEST_BENCH decode_tb -section_id eda_simulation
+set_global_assignment -name EDA_NATIVELINK_SIMULATION_TEST_BENCH execute_tb -section_id eda_simulation
 set_global_assignment -name EDA_TEST_BENCH_NAME fetch_tb -section_id eda_simulation
 set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id fetch_tb
 set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME fetch_tb -section_id fetch_tb
@@ -112,6 +112,17 @@ set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -entity w
 set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id execute_tb
 set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME execute_tb -section_id execute_tb
 set_location_assignment PIN_AB12 -to rst
+set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id proce_tb
+set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME proce_tb -section_id proce_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE vga_tb.sv -section_id vga_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE memory_cycle_tb.sv -section_id memory_cycle_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE writeback_cycle_tb.sv -section_id writeback_cycle_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE pipeline_top_tb.sv -section_id pipeline_top_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE proce_tb.sv -section_id proce_tb
+set_global_assignment -name EDA_TEST_BENCH_NAME decode_tb -section_id eda_simulation
+set_global_assignment -name EDA_TEST_BENCH_NAME execute_tb -section_id eda_simulation
+set_global_assignment -name SYSTEMVERILOG_FILE alu.sv
+set_global_assignment -name SYSTEMVERILOG_FILE mux2to1_128.sv
 set_global_assignment -name MIF_FILE dmem.mif
 set_global_assignment -name SYSTEMVERILOG_FILE execute_tb.sv
 set_global_assignment -name SYSTEMVERILOG_FILE pll.sv
@@ -143,20 +154,18 @@ set_global_assignment -name SYSTEMVERILOG_FILE memory_cycle_tb.sv
 set_global_assignment -name SYSTEMVERILOG_FILE writeback_cycle_tb.sv
 set_global_assignment -name SYSTEMVERILOG_FILE pipeline_top_tb.sv
 set_global_assignment -name SYSTEMVERILOG_FILE proce_tb.sv
-set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id proce_tb
-set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME proce_tb -section_id proce_tb
 set_global_assignment -name SYSTEMVERILOG_FILE hazard_unit.sv
 set_global_assignment -name SYSTEMVERILOG_FILE ALU.sv
-set_global_assignment -name EDA_TEST_BENCH_FILE vga_tb.sv -section_id vga_tb
-set_global_assignment -name EDA_TEST_BENCH_FILE memory_cycle_tb.sv -section_id memory_cycle_tb
-set_global_assignment -name EDA_TEST_BENCH_FILE writeback_cycle_tb.sv -section_id writeback_cycle_tb
-set_global_assignment -name EDA_TEST_BENCH_FILE pipeline_top_tb.sv -section_id pipeline_top_tb
-set_global_assignment -name EDA_TEST_BENCH_FILE execute_tb.sv -section_id execute_tb
-set_global_assignment -name EDA_TEST_BENCH_FILE proce_tb.sv -section_id proce_tb
-set_global_assignment -name EDA_TEST_BENCH_NAME decode_tb -section_id eda_simulation
+set_global_assignment -name SYSTEMVERILOG_FILE vectorial_alu.sv
+set_global_assignment -name SYSTEMVERILOG_FILE vectorial_alu_tb.sv
+set_global_assignment -name EDA_TEST_BENCH_NAME vectorial_alu_tb -section_id eda_simulation
+set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id vectorial_alu_tb
+set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME vectorial_alu_tb -section_id vectorial_alu_tb
 set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
 set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
 set_global_assignment -name EDA_TEST_BENCH_FILE fetch_tb.sv -section_id fetch_tb
 set_global_assignment -name EDA_TEST_BENCH_FILE decode_tb.sv -section_id decode_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE execute_tb.sv -section_id execute_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE vectorial_alu_tb.sv -section_id vectorial_alu_tb
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
