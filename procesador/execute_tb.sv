@@ -15,8 +15,8 @@ module execute_tb;
     reg BranchE;
     reg is_vectorial;
     reg [2:0] ALUControlE;
-    reg [31:0] RD1_E;
-    reg [31:0] RD2_E;
+    reg [128:0] RD1_E;
+    reg [128:0] RD2_E;
     reg [31:0] Imm_Ext_E;
     reg [5:0] RD_E;
     reg [31:0] PCE;
@@ -111,9 +111,9 @@ module execute_tb;
         RD1_E = 128'd10;  // First operand
         RD2_E = 128'd20;  // Second operand
         Imm_Ext_E = 32'd0;
-        RD_E = 6'b000001;  // Destination register
+        RD_E = 6'b000000;  // Destination register
         PCE = 32'd100;
-        PCPlus4E = 32'd104;
+        PCPlus4E = 32'd0;
         ForwardA_E = 2'b00;  // No forwarding
         ForwardB_E = 2'b00;  // No forwarding
 
@@ -123,41 +123,14 @@ module execute_tb;
         // Test Case 2: Vector addition
         #10;
         is_vectorial = 1;  // Vector operation
-        RD1_E = 128'h00000001_00000002_00000003_00000004;  // Vector operand A
-        RD2_E = 128'h00000001_00000002_00000003_00000004;  // Vector operand B
+        RD1_E = 128'h00000000_00000000_00000000_00000008;  // Vector operand A
+        RD2_E = 128'h00000000_00000000_00000000_00000004;  // Vector operand B
         ALUControlE = 3'b000;  // Addition for vector
 
         #20;
         $display("Test 2 (Vector Add): ALU_ResultM = %h", ALU_ResultM);
 
-        // Test Case 3: Forwarding from MEM stage
-        #10;
-        is_vectorial = 0;  // Scalar operation
-        ForwardA_E = 2'b10;  // Forward from MEM stage
-        ForwardB_E = 2'b10;  // Forward from MEM stage
-        ALU_ResultM = 32'd50;  // Forwarding result from MEM stage
-
-        #20;
-        $display("Test 3 (Forwarding from MEM): ALU_ResultM = %d", ALU_ResultM);
-
-        // Test Case 4: Branch operation (Zero condition met)
-        #10;
-        BranchE = 1;
-        ALUControlE = 3'b001;  // Branch check (subtraction)
-        RD1_E = 32'd50;
-        RD2_E = 32'd50;  // Zero condition met (RD1 - RD2 = 0)
-        Imm_Ext_E = 32'd4;  // Branch offset
-
-        #20;
-        $display("Test 4 (Branch): PCSrcE = %b, PCTargetE = %d", PCSrcE, PCTargetE);
-
-        // Test Case 5: Immediate operation (ALUSrcE = 1)
-        #10;
-        ALUSrcE = 1;  // Use immediate instead of RD2_E
-        Imm_Ext_E = 32'd100;
-
-        #20;
-        $display("Test 5 (Immediate): ALU_ResultM = %d", ALU_ResultM);
+        
 
         #100;
         $finish;

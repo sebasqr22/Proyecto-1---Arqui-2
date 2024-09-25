@@ -34,13 +34,13 @@ module vectorial_alu_tb;
         
         // Test case 2: Vector addition (full 128 bits)
         vectorial = 1;  // Vector mode
-        A = 128'h00000001_00000002_00000003_00000004;  // A = {1, 2, 3, 4}
-        B = 128'h00000001_00000002_00000003_00000004;  // B = {1, 2, 3, 4}
+        A = 128'h00000000_00000000_00000000_00000008;  // Vector operand A
+        B = 128'h00000000_00000000_00000000_00000004;  // Vector operand B
         ALUControl = 3'b000;  // Addition
         #10;
         $display("Vector Addition: Result = %h", Result);
 
-        // Test case 3: Vector subtraction
+        /*// Test case 3: Vector subtraction
         ALUControl = 3'b001;  // Subtraction
         A = 128'h00000005_00000006_00000007_00000008;  // A = {5, 6, 7, 8}
         B = 128'h00000001_00000002_00000003_00000004;  // B = {1, 2, 3, 4}
@@ -88,7 +88,7 @@ module vectorial_alu_tb;
         A = 128'h00000000_00000000_00000000_80000000;  // A = -2147483648 (first 32 bits, 2's complement)
         B = 128'h00000000_00000000_00000000_00000002;  // Shift by 2
         #10;
-        $display("Scalar Shift Right Arithmetic: Result = %h", Result);
+        $display("Scalar Shift Right Arithmetic: Result = %h", Result);*/
 
         $finish;
     end

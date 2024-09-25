@@ -10,7 +10,7 @@ module execute_cycle(clk, rst, RegWriteE, ALUSrcE, MemWriteE, ResultSrcE, Branch
 	 input [127:0] RD1_E, RD2_E; 
     input [5:0] RD_E;
     input [31:0] PCE, PCPlus4E;
-    input [31:0] ResultW;
+    input [127:0] ResultW;
     input [1:0] ForwardA_E, ForwardB_E;
 
     output PCSrcE, RegWriteM, MemWriteM, ResultSrcM;
@@ -89,8 +89,8 @@ module execute_cycle(clk, rst, RegWriteE, ALUSrcE, MemWriteE, ResultSrcE, Branch
     );
 
     // Register Logic (Storing pipeline values)
-    always @(posedge clk or negedge rst) begin
-        if (rst == 1'b0) begin
+    always @(posedge clk or posedge rst) begin
+        if (rst == 1'b1) begin
             RegWriteE_r <= 1'b0; 
             MemWriteE_r <= 1'b0; 
             ResultSrcE_r <= 1'b0;
