@@ -1,7 +1,9 @@
 module pipeline_top(	
     input clk, 
     input rst,
-	 output  [6:0] disp1
+	 output  [6:0] disp1,
+	 input step_button, 
+    input step_enable
 );
 
     // Declaration of Interim Wires
@@ -14,9 +16,18 @@ module pipeline_top(
 	 wire [1:0] ForwardBE, ForwardAE;
     wire [15:0] address_b;
 	 wire [4:0] count_out;
-	
+	 wire instr_fetch_enable; 
+    wire instr_completed;    
 
-	 
+    /
+    step_control stepper (
+        .clk(clk), 
+        .rst(rst), 
+        .step_button(step_button), 
+        .step_enable(step_enable), 
+        .instr_completed(instr_completed), // Esta señal viene de writeback
+        .instr_fetch_enable(instr_fetch_enable)
+    );
 
     // Modulos
     // Fetch cycle - conexiones revisadas
