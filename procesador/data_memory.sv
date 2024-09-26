@@ -1,24 +1,24 @@
-module data_memory(clk,rst,WE,WD,A,RD, address_b, clock_b, bitVGA);
+module data_memory(clk,WE,uart_en,WD,address_a, address_b,RD,uart_Value_in,uart_Value_out);
 
-    input clk,rst,WE,clock_b;
+    input clk,WE,uart_en;
 	 // A: addr
 	 // WD: data a escribir
-    input [31:0]A,WD,address_b;
-	 // data leida
-    output [31:0]RD;
-	 output	[31:0]  bitVGA; // salida para VGA
+    input [15:0]address_a,address_b;
+	 input [127:0] WD,uart_Value_in;
 	 
-	 dmem data_mem(
-						.address_a(A),
+	 // data leida
+    output [127:0]RD,uart_Value_out;
+	 
+	 memoria data_mem(
+						.address_a(address_a),
 						.address_b(address_b),
-						.clock_a(clk),
-						.clock_b(clock_b),
+						.clock(clk),
 						.data_a(WD),
-						.data_b(),
+						.data_b(uart_Value_in),
 						.wren_a(WE),
-						.wren_b(1'b0),
+						.wren_b(uart_en),
 						.q_a(RD),
-						.q_b(bitVGA)
+						.q_b(uart_Value_out)
 						);
 
 
