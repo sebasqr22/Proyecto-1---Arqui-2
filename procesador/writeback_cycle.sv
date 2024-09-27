@@ -4,7 +4,7 @@ module writeback_cycle(clk, rst, ResultSrcW, ALU_ResultW, ReadDataW, ResultW,cou
 	input clk, rst;
 	input [1:0]ResultSrcW;
 	input [127:0] ALU_ResultW, ReadDataW;
-	output reg [3:0] count_out;
+	output reg [6:0] count_out;
 	output [127:0] ResultW;
 
 	
@@ -20,15 +20,11 @@ module writeback_cycle(clk, rst, ResultSrcW, ALU_ResultW, ReadDataW, ResultW,cou
 						 
 	always@(posedge clk or posedge rst)begin
 		if (rst) begin
-            count_out <= 5'b00000; // Reset del contador a 0
+            count_out <= 6'b00000; // Reset del contador a 0
         end else begin
-            if (count_out == 5'd9) begin
-                count_out <= 5'b00000; // Resetea cuando llega a 9
-            end else begin
                 count_out <= count_out + 1; // Incrementa el contador
             end
         end
-	end
 	
 						 
 endmodule

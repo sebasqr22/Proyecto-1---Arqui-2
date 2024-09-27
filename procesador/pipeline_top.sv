@@ -1,9 +1,12 @@
 module pipeline_top(	
     input clk, 
     input rst,
-	 output  [6:0] disp1,
 	 input step_button, 
-    input step_enable
+    input step_enable,
+	 output  [6:0] disp1,
+	 output  [6:0] disp2,
+	 output  [6:0] disp3,
+	 output  [6:0] disp4
 );
 
     // Declaration of Interim Wires
@@ -15,9 +18,10 @@ module pipeline_top(
     wire [31:0] PCPlus4W;
 	 wire [1:0] ForwardBE, ForwardAE;
     wire [15:0] address_b;
-	 wire [4:0] count_out;
+	 wire [6:0] count_out;
 	wire clk_stepping;
 	wire clk_pipe;
+	
 
 
 
@@ -157,7 +161,10 @@ module pipeline_top(
 	  
 	 segment_driver sd1(
 		.data_in(count_out),
-		.data_out(disp1)
+		.data_out1(disp1),
+		.data_out2(disp2),
+		.data_out3(disp3),
+		.data_out4(disp4),
 	);
 	  
 	  
