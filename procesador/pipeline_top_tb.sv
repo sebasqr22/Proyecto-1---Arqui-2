@@ -8,6 +8,9 @@ module pipeline_top_tb;
     // Entradas
     reg clk;
     reg rst;
+	 reg  [6:0] disp1;
+	 logic step_button; 
+    logic step_enable;
 
     // Cableado de las señales intermedias (si se necesita monitorear)
     wire PCSrcE, RegWriteW, RegWriteE, ALUSrcE, MemWriteE, ResultSrcE, BranchE, RegWriteM, MemWriteM, ResultSrcM, ResultSrcW;
@@ -20,7 +23,10 @@ module pipeline_top_tb;
     // Instanciación del DUT
     pipeline_top dut (
         .clk(clk),
-        .rst(rst)
+        .rst(rst),
+		  .step_button(step_button),
+		  .step_enable(step_enable)
+		  
     );
 
     // Generación del reloj
@@ -33,11 +39,33 @@ module pipeline_top_tb;
     initial begin
         clk = 0;
         rst = 1;
+		  step_button=1;
+		  step_enable=0;
+		  
 
         #20; // Esperar 2 ciclos de reloj
 
         // Liberar el reset
         rst = 0;
+		  #30;
+		  
+		  
+        rst = 0;
+		  step_button=1;
+		  step_enable=0;
+		  
+		  #20
+		  
+		  step_button=0;
+		  step_enable=1;
+		  #10
+		  step_button=1;
+		  #20
+		  step_button=0;
+		  #30
+		  step_button=1;
+		  step_enable=0;
+		  
 
         // Caso de prueba 1
         // (Puedes proporcionar valores de prueba para las entradas aquí si lo deseas)

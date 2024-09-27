@@ -16,23 +16,32 @@ module pipeline_top(
 	 wire [1:0] ForwardBE, ForwardAE;
     wire [15:0] address_b;
 	 wire [4:0] count_out;
-	 wire instr_fetch_enable; 
-    wire instr_completed;    
+	wire clk_stepping;
+	wire clk_pipe;
 
-    /
+
+
+
+
+
+	reg step_button_reg, step_button_last;
+	reg stepping_state;
+
+
+    
     step_control stepper (
         .clk(clk), 
         .rst(rst), 
-        .step_button(step_button), 
-        .step_enable(step_enable), 
-        .instr_completed(instr_completed), // Esta señal viene de writeback
-        .instr_fetch_enable(instr_fetch_enable)
+        .step_button(step_button),  
+        .clk_stepping(clk_stepping)
     );
+	 
+	 assign clk_pipe= (step_enable==1'b1) ? clk_stepping : clk;
 
     // Modulos
     // Fetch cycle - conexiones revisadas
     fetch_cycle Fetch (
-        .clk(clk), 
+        .clk(clk_pipe), 
         .rst(rst), 
         .PCSrcE(PCSrcE), 
         .PCTargetE(PCTargetE), 
@@ -43,7 +52,7 @@ module pipeline_top(
 
     // Decode cycle - conexiones revisadas
     decode_cycle Decode (
-        .clk(clk), 
+        .clk(clk_pipe), 
         .rst(rst), 
         .InstrD(InstrD), 
         .PCD(PCD), 
@@ -70,7 +79,7 @@ module pipeline_top(
 						  
     // Execute cycle - conexiones revisadas
     execute_cycle Execute (
-        .clk(clk), 
+        .clk(clk_pipe), 
         .rst(rst), 
         .RegWriteE(RegWriteE), 
         .ALUSrcE(ALUSrcE), 
@@ -101,7 +110,7 @@ module pipeline_top(
 						  
     // Memory cycle - conexiones revisadas
     memory_cycle Memory (
-        .clk(clk), 
+        .clk(clk_pipe), 
         .rst(rst), 
         .RegWriteM(RegWriteM), 
         .MemWriteM(MemWriteM), 
@@ -124,7 +133,7 @@ module pipeline_top(
 						  
     // Writeback cycle
     writeback_cycle WriteBack (
-        .clk(clk), 
+        .clk(clk_pipe), 
         .rst(rst), 
         .ResultSrcW(ResultSrcW),
         .ALU_ResultW(ALU_ResultW), 
